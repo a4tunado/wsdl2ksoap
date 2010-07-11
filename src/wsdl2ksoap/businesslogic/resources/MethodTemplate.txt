@@ -1,0 +1,16 @@
+    public %%OUTPUT%% %%METHODNAME%%(%%INPUT%% params) throws Exception
+    {
+        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+        envelope.dotNet = IsDotNet;
+        envelope.setOutputSoapObject(params.GetSoapParams());
+
+        new %%OUTPUT%%().register(envelope);
+
+        AndroidHttpTransport androidHttpTransport = new AndroidHttpTransport(Address);
+        androidHttpTransport.call(params.GetSoapAction(), envelope);
+
+        %%OUTPUT%% resp = (%%OUTPUT%%)envelope.bodyIn;
+
+        return resp;
+       
+    }

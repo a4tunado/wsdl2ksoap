@@ -1,0 +1,47 @@
+package %%PACKAGENAME%%;
+
+import java.util.Hashtable;
+
+import org.ksoap2.serialization.PropertyInfo;
+import org.ksoap2.serialization.SoapSerializationEnvelope;
+
+
+public class %%CLASSNAME%% extends BaseObject {
+
+    public %%RESULTPROPTYPE%% %%RESULTPROPNAME%%;
+
+
+    public Object getProperty(int index)
+    {
+
+    	return %%RESULTPROPNAME%%;
+
+    }
+
+    public int getPropertyCount()
+    {
+        return 1;
+    }
+
+    @SuppressWarnings("unchecked")
+	public void getPropertyInfo(int index, Hashtable properties, PropertyInfo info)
+    {
+
+    	info.name = "%%RESULTPROPNAME%%";
+        info.type = new %%RESULTPROPTYPE%%().getClass();
+
+    }
+
+    public void setProperty(int index, Object value)
+    {
+
+    	%%RESULTPROPNAME%% = (%%RESULTPROPTYPE%%) value;
+
+    }
+
+    public void register(SoapSerializationEnvelope envelope) {
+        envelope.addMapping(NAMESPACE, "%%CLASSNAME%%", this.getClass());
+        %%REGISTERTYPES%%
+    }
+
+}

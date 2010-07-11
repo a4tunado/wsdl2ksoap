@@ -1,0 +1,25 @@
+package %%PACKAGENAME%%;
+
+import org.ksoap2.serialization.SoapObject;
+
+public class %%CLASSNAME%%
+{
+    private static final String METHOD_NAME = "%%SOAPMETHODNAME%%";
+    private static final String NAMESPACE = "%%NAMESPACE%%";
+
+%%PROPERTIES%%
+
+	public SoapObject GetSoapParams()
+	{
+         SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME);
+%%SOAPPROPERTIES%%
+
+         return request;
+	}
+
+	public String GetSoapAction()
+	{
+		return NAMESPACE + METHOD_NAME;
+	}
+
+}

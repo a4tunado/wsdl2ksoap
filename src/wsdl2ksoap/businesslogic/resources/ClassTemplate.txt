@@ -1,0 +1,13 @@
+package %%PACKAGENAME%%;
+
+%%IMPORTS%%
+
+public final class %%CLASSNAME%%
+{
+
+    public String Address;
+    public boolean IsDotNet = true;
+
+%%METHODS%%
+
+}

@@ -28,14 +28,14 @@ public class %%CLASSNAME%% extends BaseObject {
     {
 
     	info.name = "%%RESULTPROPNAME%%";
-        info.type = new %%RESULTPROPTYPE%%().getClass();
+        info.type = %%GETPROPINFO%%;
 
     }
 
     public void setProperty(int index, Object value)
     {
 
-    	%%RESULTPROPNAME%% = (%%RESULTPROPTYPE%%) value;
+    	%%RESULTPROPNAME%% = %%SETPROP%%;
 
     }
 

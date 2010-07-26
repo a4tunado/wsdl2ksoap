@@ -469,6 +469,15 @@ public class ClassProcessor
                         //remove placeholder
                         classText = classText.replaceAll("%%REGISTERTYPES%%", "");
                     }
+
+
+                    //set replace the getproperty placeholder
+                    classText = classText.replaceAll("%%GETPROPINFO%%",getClassTypeRetrievalString(prop.getPropertyName(),prop.getPropertyClassType()));
+
+                    //replace the setproperty place holder
+                    classText = classText.replaceAll("%%SETPROP%%",getConvertorForType(prop.getPropertyClassType()));
+
+                    
                     //now find classname and replace that with the class name
                     classText = classText.replaceAll("%%RESULTPROPNAME%%", prop.getPropertyName());
 

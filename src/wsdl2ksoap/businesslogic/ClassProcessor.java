@@ -220,9 +220,6 @@ public class ClassProcessor
                     //now find classname and replace that with the class name
                     classText = classText.replaceAll("%%CLASSNAME%%", spClass.Name);
 
-                    //set property count
-                    classText = classText.replaceAll("%%PROPCOUNT%%", String.format("%d", spClass.Properties.size()));
-
                      //set superclas
                     //classText = classText.replaceAll("%%SUPERCLASS%%",spClass.SuperClassType);
 
@@ -255,6 +252,8 @@ public class ClassProcessor
                     //now load the properties from this class
                     propertyArray.addAll(spClass.Properties);
 
+                    //set property count
+                    classText = classText.replaceAll("%%PROPCOUNT%%", String.format("%d", propertyArray.size()));
 
                     for (SoapClassProperty prop : propertyArray)
                     {
@@ -346,15 +345,15 @@ public class ClassProcessor
     {
        if (propType.equals("boolean"))
         {
-            return String.format("Boolean.TYPE)", propType);
+            return String.format("PropertyInfo.BOOLEAN_CLASS", propType);
         }
         else if (propType.equals("int"))
         {
-            return String.format("Integer.TYPE", propType);
+            return String.format("PropertyInfo.INTEGER_CLASS", propType);
         }
         else
         {
-            return String.format("%s.getClass()",propName);
+            return String.format("new %s().getClass()",propType);
         }
     }
     public static void CreateFunctionClasses(String packageName) throws Exception

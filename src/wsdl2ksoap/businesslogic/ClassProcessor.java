@@ -461,6 +461,12 @@ public class ClassProcessor
                     //now find classname and replace that with the class name
                     classText = classText.replaceAll("%%CLASSNAME%%", returnClass.Name);
 
+                    if (returnClass.Properties.isEmpty()) {
+                        SoapClassProperty dummy = new SoapClassProperty("result");
+                        returnClass.Properties.add(dummy);
+                        dummy.SetPropertyClassType("s:int");
+                    }
+
                     //get first Parameter only as it a reutrn type
                     SoapClassProperty prop = returnClass.Properties.get(0);
 

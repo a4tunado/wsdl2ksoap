@@ -37,14 +37,11 @@ public class WSDL2KSoapView extends FrameView {
 
         initComponents();
 
-
         SettingsHelper.LoadSettings();
 
         edtUrl.setText(SettingsHelper.Url);
         edtOutput.setText(SettingsHelper.OutputFolder);
         edtPackage.setText(SettingsHelper.Packagename);
-
-
 
         // status bar initialization - message timeout, idle icon and busy animation, etc
         ResourceMap resourceMap = getResourceMap();
@@ -99,6 +96,7 @@ public class WSDL2KSoapView extends FrameView {
                 }
             }
         });
+        
     }
 
     @Action
@@ -290,61 +288,33 @@ public class WSDL2KSoapView extends FrameView {
         return new ProcessWSDLTask(getApplication());
     }
 
-    private class ProcessWSDLTask extends org.jdesktop.application.Task<Object, Void> {
-        ProcessWSDLTask(org.jdesktop.application.Application app) {
-            // Runs on the EDT.  Copy GUI state that
-            // doInBackground() depends on from parameters
-            // to ProcessWSDLTask fields, here.
-            super(app);
-            PropertyContainer.reset();
-            PropertyContainer.WSDLAddress = edtUrl.getText();
+    public static void SyncProcessWSDL(String url, String outputPath, String packageName) {
+        PropertyContainer.reset();
+        PropertyContainer.WSDLAddress = url;
 
-            System.out.print(PropertyContainer.WSDLAddress);
+        System.out.print(PropertyContainer.WSDLAddress);
 
+        //Set enter values and save settings
+        SettingsHelper.Url = url;
+        SettingsHelper.OutputFolder = outputPath;
+        SettingsHelper.Packagename = packageName;
+        SettingsHelper.SaveSettings();
 
-            //Set enter values and save settings
-            SettingsHelper.Url = edtUrl.getText();
-            SettingsHelper.OutputFolder = edtOutput.getText();
-            SettingsHelper.Packagename = edtPackage.getText();
-            SettingsHelper.SaveSettings();
+        //
+        WSDLParser.ProcessWSDL();
 
-            //
-            WSDLParser.ProcessWSDL();
+        // Get package name either from text field or use namespace from wsdl
+        if (packageName.isEmpty()) {
+            packageName =  Helper.convertUrlToJavaPackageName(PropertyContainer.Namespace);
+        }
 
-//            for (int loop=0; loop < PropertyContainer.Functions.length; loop++)
-//            {
-//                 Function currentFunc = PropertyContainer.Functions[loop];
-//
-//                 System.out.println("Name: " + currentFunc.Name);
-//                 System.out.println("In: " + currentFunc.InputType);
-//                 System.out.println("Out: " + currentFunc.OutputType);
-//                 System.out.println("SoapAction: " + currentFunc.SoapAction);
-//
-//            }
-
-            
-
-            // Get package name either from text field or use namespace from wsdl
-            String packageName;
-
-            if (edtPackage.getText().length() != 0)
-            {
-                packageName = edtPackage.getText();
-     
-            }
-            else
-            {
-                packageName =  Helper.convertUrlToJavaPackageName(PropertyContainer.Namespace);
-            }
-
-            
-            if (FileHelper.createFolderStructure(edtOutput.getText(), packageName))
-            {
+        if (FileHelper.createFolderStructure(packageName, packageName))
+        {
 
                 try
                 {
                     //folder structure created  continue processing
-                    
+
                     // create service file
                     ClassProcessor.CreateServiceClass(packageName);
 
@@ -359,24 +329,26 @@ public class WSDL2KSoapView extends FrameView {
 
                     //create paramter and return class
                     ClassProcessor.CreateFunctionClasses(packageName);
-                    
+
                 }
                 catch (Exception ex)
                 {
                     System.out.print(ex.getMessage());
                 }
-                
-
-                
-                
-                
             }
+    }
+
+    private class ProcessWSDLTask extends org.jdesktop.application.Task<Object, Void> {
+        ProcessWSDLTask(org.jdesktop.application.Application app) {
+            // Runs on the EDT.  Copy GUI state that
+            // doInBackground() depends on from parameters
+            // to ProcessWSDLTask fields, here.
+            super(app);
+
+            SyncProcessWSDL(edtUrl.getText()
+                            , edtOutput.getText()
+                            , edtPackage.getText());
             
-
-
-
-            
-
         }
         @Override protected Object doInBackground() {
             // Your Task's code here.  This method runs

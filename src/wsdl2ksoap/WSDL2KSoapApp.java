@@ -19,6 +19,10 @@ public class WSDL2KSoapApp extends SingleFrameApplication {
         show(new WSDL2KSoapView(this));
     }
 
+    @Override protected void initialize(java.lang.String[] args) {
+        super.initialize(args);
+    }
+
     /**
      * This method is to initialize the specified window by injecting resources.
      * Windows shown in our application come fully initialized from the GUI
@@ -39,6 +43,20 @@ public class WSDL2KSoapApp extends SingleFrameApplication {
      * Main method launching the application.
      */
     public static void main(String[] args) {
+        
+        if (args.length == 3) {
+            try {
+                WSDL2KSoapView.SyncProcessWSDL(args[0], args[1], args[2]);
+            }
+            catch (Exception ex) {
+                System.out.print("Error occured: " + ex.getMessage());
+            }
+            return;
+        }
+        else if (args.length > 0) {
+           System.out.println("Usage: <wsdl file url> <output path> <package name>");
+        }
+        
         launch(WSDL2KSoapApp.class, args);
     }
 }

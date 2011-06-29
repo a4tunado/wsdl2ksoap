@@ -201,6 +201,8 @@ public class ClassProcessor
                         //now find element type placeholder and replace that with the element type
                         classText = classText.replaceAll("%%ELEMENTTYPE%%", spClass.ElementType);
 
+                        classText = classText.replaceAll("%%ELEMENTTYPECLASS%%", getClassTypeRetrievalString(spClass.ElementType));
+
                         //now save to folder
                         String filePath = FileHelper.GetOutputFolderPath() + "/" + spClass.Name + ".java";
                         FileHelper.WriteClassTextToFile(filePath, classText);
@@ -275,7 +277,7 @@ public class ClassProcessor
                         //prop info text
                         getPropInfoText += String.format("           case %d: \n", caseCount);
                         getPropInfoText += String.format("                info.name = \"%s\"; \n",prop.getPropertyName());
-                        getPropInfoText += String.format("                info.type = %s; \n",getClassTypeRetrievalString(prop.getPropertyName(),prop.getPropertyClassType()));
+                        getPropInfoText += String.format("                info.type = %s; \n",getClassTypeRetrievalString(prop.getPropertyClassType()));
                         getPropInfoText += String.format("                             break; \n","");
 
                         //set prop text
@@ -341,7 +343,7 @@ public class ClassProcessor
         //return "value";
     }
 
-    private static String getClassTypeRetrievalString(String propName, String propType)
+    private static String getClassTypeRetrievalString(String propType)
     {
        if (propType.equals("boolean"))
         {
@@ -350,6 +352,10 @@ public class ClassProcessor
         else if (propType.equals("int"))
         {
             return String.format("PropertyInfo.INTEGER_CLASS", propType);
+        }
+        else if (propType.equals("float"))
+        {
+            return String.format("Float.Class", propType);
         }
         else
         {
@@ -472,7 +478,7 @@ public class ClassProcessor
 
 
                     //set replace the getproperty placeholder
-                    classText = classText.replaceAll("%%GETPROPINFO%%",getClassTypeRetrievalString(prop.getPropertyName(),prop.getPropertyClassType()));
+                    classText = classText.replaceAll("%%GETPROPINFO%%",getClassTypeRetrievalString(prop.getPropertyClassType()));
 
                     //replace the setproperty place holder
                     classText = classText.replaceAll("%%SETPROP%%",getConvertorForType(prop.getPropertyClassType()));

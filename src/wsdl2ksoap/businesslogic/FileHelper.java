@@ -87,6 +87,7 @@ static public void createFolderStructure(String parentPath, String packageName) 
             out.write(text);
             out.close();
         } catch (Exception ex) {
+            System.out.println(ex.getMessage());
             return false;
         }
 

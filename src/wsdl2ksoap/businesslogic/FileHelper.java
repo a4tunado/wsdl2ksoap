@@ -58,74 +58,16 @@ static public String getContents(InputStream aStream) {
     return contents.toString();
   }
 
-static public boolean createFolderStructure(String parentPath, String packageName)
-{
-    try
-    {
-        if (parentPath.length() != 0)
-        {
-            //output folder set
-
-            //see if last character is already set with a /
-            if (parentPath.endsWith("/"))
-            {
-                //yes - so remove it
-                parentPath = parentPath.substring(0, parentPath.length()-1);
-
-            }
-
-           
-            //see if the packagename ends with a /
-            //see if last character is already set with a /
-            if (packageName.endsWith("/"))
-            {
-                //yes - so remove it
-                packageName = packageName.substring(0, packageName.length()-1);
-
-            }
-
-
-            //now split the packagename
-            String[] folders = packageName.split("\\.");
-
-
-            
-            String folderPath = parentPath;
-
-            
-            //manual packaname entry
-            //loop through in reverse order, as is the standard for Java packagenames
-            for (int loop = 0; loop < folders.length; loop++)
-            {
-                //path string
-                folderPath = folderPath + "/" + folders[loop];
-
-                File f = new File(folderPath);
-
-                if (!f.exists()) {
-                    if (!f.mkdir()) {
-                        throw new Exception("Failed to create folder");
-                    }
-                }
-
-            }
-            
-
-            //set main folder location for all files
-            m_CompleteFolderPath = folderPath;
-
-        }
-        else
-        {
-            throw new Exception("Output folder has not been set");
-        }
+static public void createFolderStructure(String parentPath, String packageName) throws Exception {
+    if (parentPath.length() != 0) {
+        //see if last character is already set with a /
+        File path = new File(parentPath, packageName.replace('.', '/'));
+        m_CompleteFolderPath = path.toString();
+        path.mkdirs();
     }
-    catch (Exception ex)
-    {
-        return false;
+    else {
+        throw new Exception("Output folder has not been set");
     }
-
-    return true;
 }
 
     static public boolean WriteClassTextToFile(String filename, String text)

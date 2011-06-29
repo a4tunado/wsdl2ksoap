@@ -308,11 +308,9 @@ public class WSDL2KSoapView extends FrameView {
             packageName =  Helper.convertUrlToJavaPackageName(PropertyContainer.Namespace);
         }
 
-        if (FileHelper.createFolderStructure(packageName, packageName))
-        {
-
                 try
                 {
+                    FileHelper.createFolderStructure(outputPath, packageName);
                     //folder structure created  continue processing
 
                     // create service file
@@ -331,11 +329,10 @@ public class WSDL2KSoapView extends FrameView {
                     ClassProcessor.CreateFunctionClasses(packageName);
 
                 }
-                catch (Exception ex)
-                {
-                    System.out.print(ex.getMessage());
+                catch (Exception ex) {
+                    System.out.println(ex.getMessage());
                 }
-            }
+        
     }
 
     private class ProcessWSDLTask extends org.jdesktop.application.Task<Object, Void> {

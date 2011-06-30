@@ -336,6 +336,18 @@ public class ClassProcessor
         {
             return String.format("Integer.parseInt(value.toString())", propType);
         }
+        else if (propType.equals("float"))
+        {
+            return String.format("Float.valueOf(value.toString())", propType);
+        }
+        else if (propType.equals("dateTime"))
+        {
+            return String.format("new Date(value.toString())", propType);
+        }
+        else if (propType.equals("base64Binary"))
+        {
+            return String.format("Base64.decodeBase64(value.toString())", propType);
+        }
         else
         {
             return String.format("(%s)value", propType);
@@ -345,7 +357,7 @@ public class ClassProcessor
 
     private static String getClassTypeRetrievalString(String propType)
     {
-       if (propType.equals("boolean"))
+        if (propType.equals("boolean"))
         {
             return String.format("PropertyInfo.BOOLEAN_CLASS", propType);
         }
@@ -355,7 +367,15 @@ public class ClassProcessor
         }
         else if (propType.equals("float"))
         {
-            return String.format("Float.Class", propType);
+            return String.format("Float.TYPE", propType);
+        }
+        else if (propType.equals("dateTime"))
+        {
+            return String.format("new Date().getClass()", propType);
+        }
+        else if (propType.equals("base64Binary"))
+        {
+            return String.format("new byte[0].getClass()", propType);
         }
         else
         {

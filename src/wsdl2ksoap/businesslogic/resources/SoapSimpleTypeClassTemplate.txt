@@ -1,0 +1,6 @@
+package %%PACKAGENAME%%;
+
+public enum %%CLASSNAME%% {
+
+%%PROPERTIES%%;
+}

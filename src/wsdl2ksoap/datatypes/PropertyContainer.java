@@ -22,6 +22,7 @@ public class PropertyContainer
 
         public static List<SoapClass> Classes = new ArrayList<SoapClass>();
         public static List<SoapClass> ComplexTypes = new ArrayList<SoapClass>();
+        public static List<SoapClass> SimpleTypes = new ArrayList<SoapClass>();
 
         public static String GetSoapPortName()
         {
@@ -53,13 +54,22 @@ public class PropertyContainer
                     return spC;
                 }
             }
+
+            //then try SimpleTypes
+            for (SoapClass spC : SimpleTypes)
+            {
+                if (spC.Name.equals(name))
+                {
+                    return spC;
+                }
+            }
             return null;
         }
 
         public static void reset()
-        {
-           
+        {           
             Classes = new ArrayList<SoapClass>();
             ComplexTypes = new ArrayList<SoapClass>();
+            SimpleTypes = new ArrayList<SoapClass>();
         }
 }

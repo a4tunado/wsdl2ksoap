@@ -289,10 +289,14 @@ public class ClassProcessor
 
                         if (prop.getIsComplexType())
                         {
+                            SoapClass soapClass =
+                                    PropertyContainer.GetClassWithName(prop.getPropertyClassType());
 
-                            //get the class for this complex type and then check to see if its an
-
-                            regTypes +=  String.format("           new %s().register(envelope); \n",prop.getPropertyClassType());
+                            if (soapClass == null
+                                    || soapClass.Type != SoapClass.ClassType.SimpleType)
+                            {                          //get the class for this complex type and then check to see if its an
+                              regTypes +=  String.format("           new %s().register(envelope); \n",prop.getPropertyClassType());
+                            }
                         }
 
                         caseCount++;
@@ -321,6 +325,50 @@ public class ClassProcessor
                     FileHelper.WriteClassTextToFile(filePath, classText);
 
                 }
+            }
+        }
+
+        //create simple types
+        InputStream simpleTypeTemplateFile = ClassProcessor.class.getResourceAsStream("resources/SoapSimpleTypeClassTemplate.txt");
+
+
+        if (simpleTypeTemplateFile != null)
+        {
+            String blankText = FileHelper.getContents(simpleTypeTemplateFile);
+            simpleTypeTemplateFile.close();
+
+            //loop through class and sort into types
+            for (SoapClass spClass : PropertyContainer.SimpleTypes)
+            {
+                    String classText = blankText;
+
+                    //replace package place holder
+                    classText = classText.replaceAll("%%PACKAGENAME%%", packagename);
+
+                    //now find classname and replace that with the class name
+                    classText = classText.replaceAll("%%CLASSNAME%%", spClass.Name);
+
+                    //build properties insert
+                    String propText = "";
+                    
+                    //need to build up properties from base class if not soapobject
+                    List<SoapClassProperty> propertyArray =  new ArrayList<SoapClassProperty>();
+
+
+                    //now load the properties from this class
+                    propertyArray.addAll(spClass.Properties);
+
+                    for (SoapClassProperty prop : propertyArray) {
+                        propText += String.format("     %s,", prop.getPropertyName()) + "\n";
+                    }
+
+                    //set property count
+                    classText = classText.replaceAll("%%PROPERTIES%%"
+                            , propText.substring(0, propText.length()-2));
+
+                    //write to file
+                    String filePath = FileHelper.GetOutputFolderPath() + "/" + spClass.Name + ".java";
+                    FileHelper.WriteClassTextToFile(filePath, classText);
             }
         }
 
@@ -370,6 +418,12 @@ public class ClassProcessor
 
     private static String getClassTypeRetrievalString(String propType)
     {
+        SoapClass soapClass = PropertyContainer.GetClassWithName(propType);
+
+        if (soapClass != null && soapClass.Type == SoapClass.ClassType.SimpleType) {
+            return String.format("%s.values()[0].getClass()", propType);
+        }
+
         if (propType.equals("boolean"))
         {
             return String.format("PropertyInfo.BOOLEAN_CLASS", propType);

@@ -14,7 +14,7 @@ import java.util.List;
  */
 public class SoapClass
 {
-    public enum ClassType { Parameter, Response, ComplexType, Unknown};
+    public enum ClassType { Parameter, Response, ComplexType, SimpleType, Unknown};
 
     public String Name;
     public ClassType Type;

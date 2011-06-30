@@ -236,6 +236,9 @@ public class WSDLParser
                     //get complexTypes
                     NodeList complexTypesNodes = typeschemaElement.getElementsByTagName("s:complexType");
 
+                    //get simpleTypes
+                    NodeList simpleTypesNodes = typeschemaElement.getElementsByTagName("s:simpleType");
+
                     //process element nodes and get class information
 
                     //create Classes container - make it big
@@ -395,10 +398,80 @@ public class WSDLParser
 
                     }
 
+                    //iterate through s:simpletypes objects
+                    for (int ctLoop = 0;ctLoop < simpleTypesNodes.getLength();ctLoop++)
+                    {
+                        Node ctypeNode = simpleTypesNodes.item(ctLoop);
+
+                        if(ctypeNode.getNodeType() == Node.ELEMENT_NODE)
+                        {
+                            Element ctypeElement = (Element)ctypeNode;
+
+                            //get header elements from list - as the list contains all s:elements from the schema nodes
+                            if (ctypeNode.hasChildNodes())
+                            {
+                                //s:elements show up for some reason but have no name
+                                if (!ctypeElement.getAttribute("name").isEmpty())
+                                {
+                                    SoapClass newClass = new SoapClass(ctypeElement.getAttribute("name"));
+
+                                    //set class type to complex type
+                                    newClass.Type = ClassType.SimpleType;
+
+                                    //check for restrictions
+                                    NodeList spRestrictionNode = ctypeElement.getElementsByTagName("s:restriction");
+                                    
+                                    if (spRestrictionNode.getLength() != 0)
+                                    {
+
+                                        Node sbRestrictionNode = spRestrictionNode.item(0);
+
+                                        if(sbRestrictionNode.getNodeType() == Node.ELEMENT_NODE)
+                                        {
+                                            Element sbRestrictionElement = (Element)sbRestrictionNode;
+
+                                            String sbBaseAttr = sbRestrictionElement.getAttribute("base");
+
+                                            if (!sbBaseAttr.equals("s:string")) {
+                                                throw new Exception("Only string enums are supported for simpleTypes");
+                                            }
+                                        }
+                                    }
+
+                                     //get elements
+                                    NodeList propertyNodes = ctypeElement.getElementsByTagName("s:enumeration");
+
+                                    //iterate through properties
+                                    for (int propLoop = 0; propLoop < propertyNodes.getLength();propLoop++)
+                                    {
+                                        Node propertyNode = propertyNodes.item(propLoop);
+
+                                        if(propertyNode.getNodeType() == Node.ELEMENT_NODE)
+                                        {
+                                            Element propertyElement = (Element)propertyNode;
+
+                                            //create new property class
+                                            SoapClassProperty newProp = new SoapClassProperty(propertyElement.getAttribute("value"));
+                                            //newProp.SetPropertyClassType(propertyElement.getAttribute("type"));
+
+                                            newClass.Properties.add(newProp);
+                                        }
+                                    }
+
+                                    System.out.println("Simple Type: " + newClass.Name + " Properties: " + newClass.Properties.size());
+
+                                    PropertyContainer.SimpleTypes.add(newClass);
+                                }
+
+                            }
+                        }
+
+                    }
+
                     //all class should have been created now - trim array
                     System.out.println("Class Count: " + PropertyContainer.Classes.size());
                     System.out.println("Complex Types: " + PropertyContainer.ComplexTypes.size());
-
+                    System.out.println("Simple Types: " + PropertyContainer.SimpleTypes.size());
 
                 }
 

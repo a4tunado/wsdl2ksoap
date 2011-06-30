@@ -1,0 +1,15 @@
+INTRO
+
+This is SOAP classes generator to be used in Android projects: http://code.google.com/p/ksoap2-android
+
+BUILDING
+
+You can build this project using NetBeans IDE http://netbeans.org/
+
+USAGE
+
+java -jar ./dist/WSDL2KSOAP.jar <wsdl uri> <output path> <package.name>
+
+TESTING
+
+There are some *.wsdl examples in ./test directory wich could be used to generate classes and compiled by wsdl2ksoap_test.sh script.

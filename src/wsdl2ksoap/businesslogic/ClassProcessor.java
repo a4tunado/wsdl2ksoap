@@ -262,12 +262,12 @@ public class ClassProcessor
 
                         if (!prop.getIsArray())
                         {
-                            propText += String.format("     public %s %s;", prop.getPropertyClassType(),prop.getPropertyName()) + "\n";
+                            propText += String.format("     public %s %s;", getPropTypeString(prop.getPropertyClassType()),prop.getPropertyName()) + "\n";
                         }
                         else
                         {
                              propText += String.format("     //array \n");
-                             propText += String.format("     public %s %s;", prop.getPropertyClassType(),prop.getPropertyName()) + "\n";
+                             propText += String.format("     public %s %s;", getPropTypeString(prop.getPropertyClassType()),prop.getPropertyName()) + "\n";
                         }
 
                         //prop case text
@@ -355,6 +355,19 @@ public class ClassProcessor
         //return "value";
     }
 
+    private static String getPropTypeString(String propType)
+    {
+        if (propType.equals("dateTime")) {
+            return "Date";
+        }
+        if (propType.equals("base64Binary")) {
+            return "byte[]";
+        }
+        else {
+            return propType;
+        }
+    }
+
     private static String getClassTypeRetrievalString(String propType)
     {
         if (propType.equals("boolean"))
@@ -429,7 +442,7 @@ public class ClassProcessor
                     for (SoapClassProperty prop : paramClass.Properties)
                     {
 
-                        propText += String.format("     public %s %s;", prop.getPropertyClassType(),prop.getPropertyName()) + "\n";
+                        propText += String.format("     public %s %s;", getPropTypeString(prop.getPropertyClassType()),prop.getPropertyName()) + "\n";
 
                         soapPropText += String.format("     request.addProperty(\"%s\", %s);", prop.getPropertyName(),prop.getPropertyName()) + "\n";
 
@@ -514,7 +527,7 @@ public class ClassProcessor
                     classText = classText.replaceAll("%%RESULTPROPNAME%%", prop.getPropertyName());
 
                     //now find classname and replace that with the class name
-                    classText = classText.replaceAll("%%RESULTPROPTYPE%%", prop.getPropertyClassType());
+                    classText = classText.replaceAll("%%RESULTPROPTYPE%%", getPropTypeString(prop.getPropertyClassType()));
 
 
                     //now save to folder

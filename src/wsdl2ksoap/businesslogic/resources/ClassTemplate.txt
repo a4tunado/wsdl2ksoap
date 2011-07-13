@@ -4,9 +4,14 @@ package %%PACKAGENAME%%;
 
 public final class %%CLASSNAME%%
 {
-
     public String Address;
     public boolean IsDotNet = true;
+
+    public Marshal[] marshals;
+
+    public %%CLASSNAME%%() {
+        marshals = new Marshal[]{ new MarshalBase64() };
+    }
 
 %%METHODS%%
 

@@ -4,6 +4,8 @@
         envelope.dotNet = IsDotNet;
         envelope.setOutputSoapObject(params.GetSoapParams());
 
+        for (Marshal item : marshals) { item.register(envelope); }
+
         new %%OUTPUT%%().register(envelope);
 
         AndroidHttpTransport androidHttpTransport = new AndroidHttpTransport(Address);

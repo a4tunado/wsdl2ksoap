@@ -394,7 +394,7 @@ public class ClassProcessor
         }
         else if (propType.equals("base64Binary"))
         {
-            return String.format("Base64.decodeBase64(value.toString())", propType);
+            return String.format("(byte[])(value)", propType);
         }
         else
         {

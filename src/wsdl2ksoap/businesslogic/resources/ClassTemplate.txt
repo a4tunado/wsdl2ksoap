@@ -17,12 +17,28 @@ public final class %%CLASSNAME%% {
         Marshals = new Marshal[]{ new MarshalBase64() };
     }
 
-    public SoapSerializationEnvelope newEnvelope() {
+    private SoapSerializationEnvelope newEnvelope() {
         SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
         envelope.dotNet = IsDotNet;
         envelope.headerOut = Headers;
         for (Marshal item : Marshals) { item.register(envelope); }
         return envelope;
+    }
+
+    private Object Transport(String action, SoapSerializationEnvelope envelope) throws Exception {
+        AndroidHttpTransport transport = new AndroidHttpTransport(Address);
+        transport.debug = Debug;
+        try {
+            transport.call(action, envelope);
+        }
+        catch (Exception ex) { throw ex; }
+        finally {
+            if (transport.debug) {
+                System.err.println(transport.requestDump);
+                System.err.println(transport.responseDump);
+            }
+        }
+        return envelope.bodyIn;
     }
 
 %%METHODS%%

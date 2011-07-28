@@ -1,22 +1,6 @@
     public %%OUTPUT%% %%METHODNAME%%(%%INPUT%% params) throws Exception {
         SoapSerializationEnvelope envelope = newEnvelope();
         envelope.setOutputSoapObject(params.GetSoapParams());
-
         new %%OUTPUT%%().register(envelope);
-
-        AndroidHttpTransport androidHttpTransport = new AndroidHttpTransport(Address);
-        androidHttpTransport.debug = Debug;
-
-        try { androidHttpTransport.call(params.GetSoapAction(), envelope); }
-        catch (Exception ex) { throw ex; }
-        finally {
-            if (androidHttpTransport.debug) {
-                System.err.println(androidHttpTransport.requestDump);
-                System.err.println(androidHttpTransport.responseDump);
-            }
-        }
-
-        %%OUTPUT%% resp = (%%OUTPUT%%)envelope.bodyIn;
-
-        return resp;
+        return (%%OUTPUT%%)Transport(params.GetSoapAction(), envelope);
     }

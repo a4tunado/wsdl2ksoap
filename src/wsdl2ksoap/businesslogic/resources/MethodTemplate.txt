@@ -1,18 +1,22 @@
-    public %%OUTPUT%% %%METHODNAME%%(%%INPUT%% params) throws Exception
-    {
-        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
-        envelope.dotNet = IsDotNet;
+    public %%OUTPUT%% %%METHODNAME%%(%%INPUT%% params) throws Exception {
+        SoapSerializationEnvelope envelope = newEnvelope();
         envelope.setOutputSoapObject(params.GetSoapParams());
-
-        for (Marshal item : marshals) { item.register(envelope); }
 
         new %%OUTPUT%%().register(envelope);
 
         AndroidHttpTransport androidHttpTransport = new AndroidHttpTransport(Address);
-        androidHttpTransport.call(params.GetSoapAction(), envelope);
+        androidHttpTransport.debug = Debug;
+
+        try { androidHttpTransport.call(params.GetSoapAction(), envelope); }
+        catch (Exception ex) { throw ex; }
+        finally {
+            if (androidHttpTransport.debug) {
+                System.err.println(androidHttpTransport.requestDump);
+                System.err.println(androidHttpTransport.responseDump);
+            }
+        }
 
         %%OUTPUT%% resp = (%%OUTPUT%%)envelope.bodyIn;
 
         return resp;
-       
     }

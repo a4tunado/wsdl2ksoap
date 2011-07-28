@@ -2,15 +2,27 @@ package %%PACKAGENAME%%;
 
 %%IMPORTS%%
 
-public final class %%CLASSNAME%%
-{
+import org.kxml2.kdom.Element;
+
+public final class %%CLASSNAME%% {
     public String Address;
     public boolean IsDotNet = true;
 
-    public Marshal[] marshals;
+    public boolean Debug = false;
+
+    public Element[] Headers;
+    public Marshal[] Marshals;
 
     public %%CLASSNAME%%() {
-        marshals = new Marshal[]{ new MarshalBase64() };
+        Marshals = new Marshal[]{ new MarshalBase64() };
+    }
+
+    public SoapSerializationEnvelope newEnvelope() {
+        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+        envelope.dotNet = IsDotNet;
+        envelope.headerOut = Headers;
+        for (Marshal item : Marshals) { item.register(envelope); }
+        return envelope;
     }
 
 %%METHODS%%

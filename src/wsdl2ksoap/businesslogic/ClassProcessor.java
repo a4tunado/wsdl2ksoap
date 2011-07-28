@@ -376,6 +376,12 @@ public class ClassProcessor
 
     private static String getConvertorForType(String propType)
     {
+        SoapClass soapClass = PropertyContainer.GetClassWithName(propType);
+
+        if (soapClass != null && soapClass.Type == SoapClass.ClassType.SimpleType) {
+            return String.format("%s.valueOf(value.toString())", propType);
+        }
+
         if (propType.equals("boolean"))
         {
             return String.format("Boolean.getBoolean(value.toString())", propType);

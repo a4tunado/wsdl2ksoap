@@ -330,7 +330,8 @@ public class WSDL2KSoapView extends FrameView {
 
                 }
                 catch (Exception ex) {
-                    System.out.println(ex.getMessage());
+                    System.out.println(ex.toString());
+					ex.printStackTrace();
                 }
         
     }

@@ -50,24 +50,15 @@ public class SoapClassProperty
 
         String ns = strings[0];
 
-        if (ns.equals("s"))
-        {
-            //not a complex type.  convert to java datatypes
-            m_Type = convertToJavaType(strings[1]);
-            m_isComplexType = false;
-        }
-        else if(ns.equals("tns"))
-        {
+        if(ns.equals("tns")) {
             //complex type
             m_Type = strings[1];
             m_isComplexType = true;
         }
-        else
-        {
-            System.out.println(classType);
-        }
-
-        
+		else {
+			m_Type = convertToJavaType(strings[1]);
+            m_isComplexType = false;
+		}
     }
 
     public void SetIsArray(boolean isArray)
@@ -93,7 +84,10 @@ public class SoapClassProperty
 
         //check for decimal and convert to float
         if (soapType.equals("decimal"))return "float";
-       
+      
+		//check for guid
+		if (soapType.equals("guid")) return "String";
+ 
         return soapType;
 
      

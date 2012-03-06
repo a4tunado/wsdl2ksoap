@@ -56,8 +56,12 @@ public class SoapClassProperty
             m_isComplexType = true;
         }
 		else {
-			m_Type = convertToJavaType(strings[1]);
-            m_isComplexType = false;
+			try {
+				m_Type = convertToJavaType(strings[1]);
+			} catch (Exception e) {
+				m_Type = "Object";
+			}
+			m_isComplexType = false;
 		}
     }
 
